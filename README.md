@@ -6,13 +6,48 @@ MCP-сервер для [ELMA365](https://elma365.com) API с поддержко
 
 ## Возможности
 
-### Кросс-приложенческие запросы
+### Один запрос — полный ответ
 
-```
-«Компании, у которых сумма договоров больше 10000»
+Сервер строит сложные EQL-запросы с кросс-приложенческими подзапросами. Вместо цепочки
+«найди ID в одном приложении → подставь в другое» — один вызов `search_app_items`.
+
+**Объекты в Санкт-Петербурге с оформленными подобъектами:**
+```eql
+[city] like 'Санкт-Петербург'
+  and [__id] in (select [object] from [construction_object.subobject])
 ```
 
-EQL: `[contracts] in (select [__id] from [crm.contracts] where [total] > 10000)`
+**Компании, где ответственный — конкретный сотрудник:**
+```eql
+[responsible_employees_employee_details]
+  in (select [__id] from [_system_catalogs.employee]
+      where [fullName.lastname] like 'Чеботарь')
+```
+
+**Заявки на проектирование направления BS за этот год:**
+```eql
+[__name] like 'BS' and [__createdAt] > Datetime(2026, 1, 1)
+```
+
+**Заявки BS, привязанные к объектам конкретного офиса продаж:**
+```eql
+[__name] like 'BS'
+  and [subobject_app] in (
+    select [__id] from [construction_object.subobject]
+    where [object] in (
+      select [__id] from [construction_object.construction_object]
+      where [sales_office] in (
+        select [__id] from [crm.salesoffice]
+        where [__name] like 'BS'
+      )
+    )
+  )
+```
+
+**Не начатые задачи CRM для исполнителя:**
+```eql
+[performer_user] = 'uuid-исполнителя' and [in_progress] = false
+```
 
 ## Установка
 

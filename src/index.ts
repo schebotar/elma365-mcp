@@ -50,14 +50,21 @@ export function createServer(): McpServer {
 
   server.tool(
     "search_app_items",
-    "Поиск элементов приложения с использованием EQL-запроса. " +
-      "Поддерживает сложные запросы с RelativeDatetime, подзапросами, логическими операторами.\n\n" +
-      "EQL-синтаксис:\n" +
+    "Поиск элементов приложения через EQL-запрос. Основной инструмент — все фильтры в одном запросе, " +
+      "без цепочек вызовов. Кросс-приложенческие подзапросы позволяют ссылаться на другие приложения " +
+      "прямо в условии.\n\n" +
+      "ПРИМЕРЫ ОДНИМ ЗАПРОСОМ:\n" +
+      "- Объекты в городе с оформленными подобъектами:\n" +
+      "  [city] like 'Санкт-Петербург' and [__id] in (select [object] from [construction_object.subobject])\n" +
+      "- Компании с ответственным сотрудником:\n" +
+      "  [responsible_employees_employee_details] in (select [__id] from [_system_catalogs.employee] where [fullName.lastname] like 'Чеботарь')\n" +
+      "- Заявки BS за этот год:\n" +
+      "  [__name] like 'BS' and [__createdAt] > Datetime(2026, 1, 1)\n\n" +
+      "СИНТАКСИС:\n" +
       "- Сравнение: [field] = 'value', [field] > 100, [field] like 'pattern'\n" +
-      "- Даты: [__createdAt] > RelativeDatetime('-20d','0d'), [date] = Datetime(2025, 1, 31)\n" +
-      "- Пользователи: [__createdBy] = 'uuid', CurrentUser()\n" +
-      "- Логика: and, or, not, скобки\n" +
       "- Подзапросы: [field] in (select [__id] from [ns.code] where condition)\n" +
+      "- Даты: [__createdAt] > RelativeDatetime('-20d','0d'), [date] = Datetime(2025, 1, 31)\n" +
+      "- Логика: and, or, not, скобки\n" +
       "- Системные поля: __id, __createdAt, __createdBy, __updatedAt, __updatedBy, __name",
     searchAppItemsSchema.shape,
     async (params) => ({
