@@ -1,0 +1,29 @@
+{
+  "name": "@chebser/elma365-mcp",
+  "version": "1.0.0",
+  "description": "MCP-сервер для ELMA365 API с поддержкой EQL-поиска элементов приложений",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "elma365-mcp": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/index.ts",
+    "start": "node dist/index.js",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "keywords": ["mcp", "elma365", "eql", "bpm", "low-code"],
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.25.0",
+    "zod": "^3.25.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0"
+  }
+}
