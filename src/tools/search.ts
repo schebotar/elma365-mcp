@@ -18,10 +18,6 @@ export const searchAppItemsSchema = z.object({
     ),
   size: z.number().optional().describe("Количество возвращаемых элементов (по умолчанию 50, макс. 10000)"),
   from: z.number().optional().describe("Смещение для пагинации (по умолчанию 0)"),
-  fields: z
-    .array(z.string())
-    .optional()
-    .describe("Список кодов полей для включения в ответ. Если не указан — возвращаются все поля."),
 });
 
 export async function handleSearchAppItems(
@@ -37,10 +33,6 @@ export async function handleSearchAppItems(
     },
   };
 
-  if (params.fields) {
-    body.fields = params.fields;
-  }
-
   const result = await elmaRequest(
     "POST",
     `app/${params.namespace}/${params.code}/list`,
@@ -48,8 +40,10 @@ export async function handleSearchAppItems(
   );
 
   const data = result as Record<string, unknown>;
-  const items = data.data ?? data.items ?? data;
-  const total = data.total ?? (Array.isArray(items) ? (items as unknown[]).length : "unknown");
+  const itemsWrapper = (data.data ?? data.items ?? data) as Record<string, unknown>;
+  const innerResult = itemsWrapper?.result as Record<string, unknown> | undefined;
+  const items = (innerResult?.result as unknown[]) ?? [];
+  const total = innerResult?.total ?? items.length;
 
   return JSON.stringify(
     {

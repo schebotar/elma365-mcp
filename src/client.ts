@@ -66,7 +66,10 @@ export async function elmaRequest(
       throw new Error(`ELMA365 HTTP ${response.status}: ${response.statusText}${errBody ? ` — ${errBody}` : ""}`);
     } catch (error) {
       clearTimeout(timer);
-      if (error instanceof DOMException && error.name === "AbortError" && attempt < MAX_RETRIES) {
+      const isAbortError =
+        (typeof DOMException !== "undefined" && error instanceof DOMException && error.name === "AbortError") ||
+        (error instanceof Error && error.name === "AbortError");
+      if (isAbortError && attempt < MAX_RETRIES) {
         console.error(`[elma365-mcp] Таймаут, повтор (${attempt}/${MAX_RETRIES})`);
         continue;
       }

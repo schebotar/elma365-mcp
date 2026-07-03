@@ -15,17 +15,13 @@ import {
   handleSearchAppItems,
 } from "./tools/search.js";
 
-// CRUD tools
+// Read tools
 import {
   getAppItemSchema,
   handleGetAppItem,
-  createAppItemSchema,
-  handleCreateAppItem,
-  updateAppItemSchema,
-  handleUpdateAppItem,
 } from "./tools/items.js";
 
-const TOOL_COUNT = 5;
+const TOOL_COUNT = 3;
 
 export function createServer(): McpServer {
   const server = new McpServer({
@@ -80,26 +76,6 @@ export function createServer(): McpServer {
     getAppItemSchema.shape,
     async (params) => ({
       content: [{ type: "text", text: await handleGetAppItem(params) }],
-    }),
-  );
-
-  server.tool(
-    "create_app_item",
-    "Создать новый элемент в приложении ELMA365. " +
-      "Принимает объект data с кодами полей и их значениями.",
-    createAppItemSchema.shape,
-    async (params) => ({
-      content: [{ type: "text", text: await handleCreateAppItem(params) }],
-    }),
-  );
-
-  server.tool(
-    "update_app_item",
-    "Обновить существующий элемент приложения по UUID. " +
-      "Принимает объект data с кодами полей и новыми значениями. Обновляются только указанные поля.",
-    updateAppItemSchema.shape,
-    async (params) => ({
-      content: [{ type: "text", text: await handleUpdateAppItem(params) }],
     }),
   );
 
