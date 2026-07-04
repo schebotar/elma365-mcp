@@ -1,4 +1,4 @@
-const TIMEOUT_MS = 15_000;
+const TIMEOUT_MS = 30_000;
 const MAX_RETRIES = 3;
 
 export function getDomain(): string {
