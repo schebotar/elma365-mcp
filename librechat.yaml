@@ -13,7 +13,7 @@ endpoints:
         default:
           - "deepseek-chat"
           - "deepseek-reasoner"
-        fetch: false
+        fetch: true
       titleConvo: true
       titleModel: "deepseek-chat"
       modelDisplayLabel: "DeepSeek"
