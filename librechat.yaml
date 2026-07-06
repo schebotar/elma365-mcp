@@ -11,11 +11,12 @@ endpoints:
       baseURL: "https://api.deepseek.com/v1"
       models:
         default:
-          - "deepseek-chat"
-          - "deepseek-reasoner"
+          - "deepseek-v4-pro"
+          - "deepseek-v4-flash"
         fetch: true
+      maxContextTokens: 1000000
       titleConvo: true
-      titleModel: "deepseek-chat"
+      titleModel: "deepseek-v4-flash"
       modelDisplayLabel: "DeepSeek"
 
 # ── MCP-сервер ELMA365 ───────────────────────────────────────────
