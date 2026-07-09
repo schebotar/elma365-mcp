@@ -32,7 +32,9 @@ export const searchAppItemsSchema = z.object({
         "Логические операторы:\n" +
         "  AND — все условия: [field1] = 1 and [field2] = 2\n" +
         "  OR — любое из условий: [field1] = 1 or [field2] = 2\n" +
-        "  NOT — отрицание (ставится перед условием): not [field] is null, not [field] in ('a','b'),\n" +
+        "  NOT — отрицание (ставится ПЕРЕД условием).\n" +
+        "    ЗАПРЕЩЕНО: [field] is not null, [field] not in (...), [field] not like '...'\n" +
+        "    ПРАВИЛЬНО: not [field] is null, not [field] in ('a','b'),\n" +
         "    not ([a] like 'x' or [b] like 'y') — отрицание группы в скобках.\n" +
         "    (not [a] = 'x') and [a] like 'y' — НЕ равно x, но содержит y.\n" +
         "Для поиска пользователей используй search_users вместо кросс-подзапроса к _system_catalogs.\n" +

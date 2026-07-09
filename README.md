@@ -189,6 +189,8 @@ librechat (3080) ──→ mongodb
 [field1] = 'a' and [field2] > 10
 [field1] = 'a' or [field1] = 'b'
 not ([field] = 'x')
+// NOT всегда перед условием: not [field] is null (НЕ [field] is not null!)
+// not [field] in ('a','b'), not [field] like 'text'
 
 // Подзапросы
 [field] in (select [__id] from [ns.code] where condition)

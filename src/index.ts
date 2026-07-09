@@ -192,6 +192,9 @@ export function createServer(): McpServer {
       "- OR — хотя бы одно условие должно выполняться.\n" +
       "  Пример: [order_number] in (6,7) or [client] is null\n" +
       "- NOT — отрицание одного условия (ставится ПЕРЕД условием).\n" +
+      "  ВАЖНО: NOT всегда ставится ПЕРЕД выражением, а не внутри него.\n" +
+      "  ЗАПРЕЩЕНО: [field] is not null, [field] not in (...), [field] not like '...' — так НЕЛЬЗЯ!\n" +
+      "  ПРАВИЛЬНО: not [field] is null, not [field] in (...), not [field] like '...'\n" +
       "  Примеры:\n" +
       "    not [payment] is null — поле заполнено (не пустое)\n" +
       "    not [client_name] in ('Петров', 'Иванов') — имя НЕ совпадает ни с одним из списка\n" +
