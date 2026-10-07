@@ -51,10 +51,6 @@ import {
   handleUpdateAppItem,
   setAppItemStatusSchema,
   handleSetAppItemStatus,
-  deleteAppItemSchema,
-  handleDeleteAppItem,
-  restoreAppItemSchema,
-  handleRestoreAppItem,
   saveAppItemsBatchSchema,
   handleSaveAppItemsBatch,
 } from "./tools/items.js";
@@ -75,7 +71,7 @@ import {
   handleSkipProcessInstanceStep,
 } from "./tools/processes.js";
 
-const TOOL_COUNT = 22;
+const TOOL_COUNT = 20;
 
 export function createServer(): McpServer {
   const server = new McpServer({
@@ -365,31 +361,6 @@ export function createServer(): McpServer {
     },
     async (params) => ({
       content: [{ type: "text", text: await handleSetAppItemStatus(params) }],
-    }),
-  );
-
-  server.registerTool(
-    "delete_app_item",
-    { description:
-    "Удалить элемент приложения (мягкое удаление — проставляется поле __deletedAt). " +
-      "Отдельного эндпоинта удаления в API нет, поэтому используется update с __deletedAt. " +
-      "Восстановить можно через restore_app_item.",
-      inputSchema: deleteAppItemSchema.shape,
-    },
-    async (params) => ({
-      content: [{ type: "text", text: await handleDeleteAppItem(params) }],
-    }),
-  );
-
-  server.registerTool(
-    "restore_app_item",
-    { description:
-    "Восстановить удалённый элемент (сброс __deletedAt в null). " +
-      "Если сброс не восстанавливает элемент полностью, используй run_process с admin_restoration_workflow.",
-      inputSchema: restoreAppItemSchema.shape,
-    },
-    async (params) => ({
-      content: [{ type: "text", text: await handleRestoreAppItem(params) }],
     }),
   );
 

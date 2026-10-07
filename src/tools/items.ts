@@ -111,50 +111,6 @@ export async function handleSetAppItemStatus(
   return writeResult(result);
 }
 
-// ─── delete_app_item ─────────────────────────────────────────────
-
-export const deleteAppItemSchema = z.object({
-  namespace: z.string().describe("Код раздела (namespace)"),
-  code: z.string().describe("Код приложения"),
-  id: z.string().describe("UUID элемента приложения"),
-  deletedAt: z
-    .string()
-    .optional()
-    .describe("ISO-время удаления. По умолчанию — текущее время."),
-});
-
-export async function handleDeleteAppItem(
-  params: z.infer<typeof deleteAppItemSchema>,
-): Promise<string> {
-  const result = await elmaRequest(
-    "POST",
-    `app/${params.namespace}/${params.code}/${params.id}/update`,
-    { context: { __deletedAt: params.deletedAt ?? new Date().toISOString() } },
-  );
-
-  return writeResult(result);
-}
-
-// ─── restore_app_item ────────────────────────────────────────────
-
-export const restoreAppItemSchema = z.object({
-  namespace: z.string().describe("Код раздела (namespace)"),
-  code: z.string().describe("Код приложения"),
-  id: z.string().describe("UUID элемента приложения"),
-});
-
-export async function handleRestoreAppItem(
-  params: z.infer<typeof restoreAppItemSchema>,
-): Promise<string> {
-  const result = await elmaRequest(
-    "POST",
-    `app/${params.namespace}/${params.code}/${params.id}/update`,
-    { context: { __deletedAt: null } },
-  );
-
-  return writeResult(result);
-}
-
 // ─── save_app_items_batch ────────────────────────────────────────
 
 export const saveAppItemsBatchSchema = z.object({

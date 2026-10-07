@@ -2,7 +2,7 @@
 
 MCP-сервер для [ELMA365](https://elma365.com) API с поддержкой **EQL-поиска** — поиск элементов приложений по произвольным запросам, включая естественный язык через LLM.
 
-**22 инструмента**: чтение схем и элементов, поиск (EQL), пользователи и сотрудники, CRUD элементов (создание, изменение, статус, удаление, восстановление, массовое сохранение) и работа с процессами (запуск, поиск экземпляров, чтение, прерывание, контекст, пропуск шага).
+**20 инструментов**: чтение схем и элементов, поиск (EQL), пользователи и сотрудники, CRUD элементов (создание, изменение, статус, массовое сохранение) и работа с процессами (запуск, поиск экземпляров, чтение, прерывание, контекст, пропуск шага).
 
 ## Возможности
 
@@ -56,11 +56,12 @@ MCP-сервер для [ELMA365](https://elma365.com) API с поддержко
 | Обнаружение и схема | `discover_apps`, `get_app_schema`, `get_app_statuses`, `get_app_fields`, `get_process_templates` |
 | Поиск и чтение | `search_app_items`, `get_app_item` |
 | Пользователи | `search_users`, `get_user`, `search_employees` |
-| CRUD элементов | `create_app_item`, `update_app_item`, `set_app_item_status`, `delete_app_item`, `restore_app_item`, `save_app_items_batch` |
+| CRUD элементов | `create_app_item`, `update_app_item`, `set_app_item_status`, `save_app_items_batch` |
 | Процессы (BPM) | `run_process`, `search_process_instances`, `get_process_instance`, `interrupt_process_instance`, `update_process_instance_context`, `skip_process_instance_step` |
 
-Примечание: удаление и восстановление элементов выполняются через `update` с полем `__deletedAt`
-(мягкое удаление) — отдельного эндпоинта удаления в `/pub/v1` нет.
+Примечание: публичный API `/pub/v1` не поддерживает удаление и восстановление элементов
+(системное поле `__deletedAt` игнорируется в `update`) — эти операции выполняются в интерфейсе
+или процессами портала.
 
 ## Установка
 
