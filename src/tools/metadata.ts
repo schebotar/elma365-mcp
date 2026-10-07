@@ -53,7 +53,7 @@ const get = async (endpoint: string) => normalizeGet(await elmaRequest("GET", en
 
 const PROCESS_NAMESPACE_DESCRIPTION =
   "Код раздела или модуля. Для процесса приложения — 'раздел.приложение' " +
-  "(напр. 'contract_management.contract'); для модульного процесса — код модуля.";
+  "(напр. 'example_namespace.example_app'); для модульного процесса — код модуля.";
 
 export const metadataTools: MetadataToolDef[] = [
   {

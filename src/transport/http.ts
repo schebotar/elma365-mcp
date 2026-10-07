@@ -1,7 +1,7 @@
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import * as http from "node:http";
 import { randomUUID } from "node:crypto";
-import { createServer } from "../index.js";
+import { createServer } from "../server.js";
 
 /**
  * Сессии MCP: один сервер + транспорт на каждую сессию.

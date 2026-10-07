@@ -3,13 +3,13 @@ import { elmaRequest } from "../client.js";
 
 /**
  * Инструменты для работы с процессами (BPM) ELMA365.
- * namespace для процессов приложения — "раздел.приложение" (напр. "contract_management.contract"),
+ * namespace для процессов приложения — "раздел.приложение" (напр. "example_namespace.example_app"),
  * для процессов модуля — код модуля.
  */
 
 const NAMESPACE_DESCRIPTION =
   "Код раздела или модуля. Для процесса приложения — 'раздел.приложение' " +
-  "(напр. 'contract_management.contract'); для модульного процесса — код модуля.";
+  "(напр. 'example_namespace.example_app'); для модульного процесса — код модуля.";
 
 function apiError(result: Record<string, unknown>): string {
   return JSON.stringify(
@@ -25,7 +25,7 @@ export const runProcessSchema = z.object({
   namespace: z.string().describe(NAMESPACE_DESCRIPTION),
   code: z
     .string()
-    .describe("Код процесса (шаблона), напр. 'contract_termination_workflow'"),
+    .describe("Код процесса (шаблона), напр. 'example_process'"),
   context: z
     .record(z.unknown())
     .optional()

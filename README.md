@@ -11,34 +11,34 @@ MCP-сервер для [ELMA365](https://elma365.com) API с поддержко
 Сервер строит сложные EQL-запросы с кросс-приложенческими подзапросами. Вместо цепочки
 «найди ID в одном приложении → подставь в другое» — один вызов `search_app_items`.
 
-**Объекты в Санкт-Петербурге с оформленными подобъектами:**
+**Объекты в городе с оформленными подобъектами:**
 ```eql
-[city] like 'Санкт-Петербург'
-  and [__id] in (select [object] from [construction_object.subobject])
+[city] like 'Москва'
+  and [__id] in (select [object] from [example_catalog.subobject])
 ```
 
 **Компании, где ответственный — конкретный сотрудник:**
 ```eql
 [responsible_employees_employee_details]
   in (select [__id] from [_system_catalogs.employee]
-      where [fullName.lastname] like 'Чеботарь')
+      where [fullName.lastname] like 'Иванов')
 ```
 
-**Заявки на проектирование направления BS за этот год:**
+**Заявки направления PROJ за этот год:**
 ```eql
-[__name] like 'BS' and [__createdAt] > Datetime(2026, 1, 1)
+[__name] like 'PROJ' and [__createdAt] > Datetime(2026, 1, 1)
 ```
 
-**Заявки BS, привязанные к объектам конкретного офиса продаж:**
+**Заявки PROJ, привязанные к объектам конкретного офиса продаж:**
 ```eql
-[__name] like 'BS'
+[__name] like 'PROJ'
   and [subobject_app] in (
-    select [__id] from [construction_object.subobject]
+    select [__id] from [example_catalog.subobject]
     where [object] in (
-      select [__id] from [construction_object.construction_object]
+      select [__id] from [example_catalog.object]
       where [sales_office] in (
-        select [__id] from [crm.salesoffice]
-        where [__name] like 'BS'
+        select [__id] from [example_sales.office]
+        where [__name] like 'PROJ'
       )
     )
   )

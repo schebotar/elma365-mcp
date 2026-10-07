@@ -1,0 +1,117 @@
+# Публикация релиза: тег vX.Y.Z → пакет в npm + страница релиза на GitHub.
+#
+# Триггер только по тегу: версию в npm не перезаписать, поэтому «на каждый мерж»
+# не годится. Перед публикацией гоняются те же проверки, что в ci.yml, плюс две
+# страховки: тег обязан стоять на master и совпадать с версией в package.json —
+# публикация необратима, дешевле остановиться до неё.
+#
+# Аутентификация в npm — Trusted Publishing (OIDC), долгоживущего токена в
+# secrets нет. Доверенный издатель заводится один раз и ТОЛЬКО ПОСЛЕ первой
+# публикации: у несуществующего пакета настраивать нечего (`npm trust` отвечает
+# 403). Поэтому дебютную версию публикуют вручную, а дальше выпуски делает этот
+# workflow.
+#
+# Порядок дебюта:
+#   1. npm publish --access public   (с того же коммита, на который встанет тег)
+#   2. npm trust github @chebser/elma365-mcp --file release.yml \
+#        --repo schebotar/elma365-mcp --allow-publish
+#   3. проверка: npm trust list @chebser/elma365-mcp
+# Флаг --allow-publish обязателен: конфигурации, созданные после 03.09.2026, по
+# умолчанию разрешают только `npm stage publish`, а workflow зовёт `npm publish`.
+#
+# Аттестация provenance при публикации по OIDC генерируется автоматически: флаг
+# --provenance не нужен и вреден — он делает генерацию обязательной.
+#
+# Запасной путь, если trusted publishing недоступен: granular-токен на один пакет
+# в секрете NPM_TOKEN и `env: NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}` в шаге
+# публикации — с заметкой о ротации токена.
+
+name: release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write # создание GitHub Release
+  id-token: write # OIDC для Trusted Publishing
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0 # нужна история: проверяем, что тег на master
+
+      # Кеш зависимостей в релизной сборке не используем: он подмешивает в
+      # артефакт то, что к тегу отношения не имеет.
+      - name: Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+
+      - name: Тег стоит на master
+        run: |
+          git fetch --no-tags origin master:refs/remotes/origin/master
+          if ! git merge-base --is-ancestor "$GITHUB_SHA" origin/master; then
+            echo "::error::Тег $GITHUB_REF_NAME не на master — релиз собирается только оттуда"
+            exit 1
+          fi
+
+      - name: Версия тега совпадает с package.json
+        run: |
+          expected="v$(node -p "require('./package.json').version")"
+          if [ "$expected" != "$GITHUB_REF_NAME" ]; then
+            echo "::error::Тег $GITHUB_REF_NAME, а в package.json $expected — публикация остановлена"
+            exit 1
+          fi
+          echo "Версия: $GITHUB_REF_NAME"
+
+      - name: Зависимости
+        run: npm ci
+
+      # Trusted Publishing требует npm >= 11.5.1, в Node 22 идёт npm 10.x
+      - name: npm для Trusted Publishing
+        run: npm install -g npm@^11
+
+      - name: Типы и инвентарь инструментов
+        run: npm run check
+
+      - name: Старт сервера по stdio
+        run: npm run smoke
+
+      - name: Состав пакета в лог
+        run: npm pack --dry-run
+
+      # Дебютную версию публикуют руками, поэтому версия может быть уже в
+      # реестре — тогда шаг публикации пропускается.
+      - name: Версия уже в реестре?
+        id: registry
+        run: |
+          version="$(node -p "require('./package.json').version")"
+          if npm view "@chebser/elma365-mcp@$version" version >/dev/null 2>&1; then
+            echo "published=true" >> "$GITHUB_OUTPUT"
+            echo "::notice::@chebser/elma365-mcp@$version уже в реестре — публикация пропускается"
+          else
+            echo "published=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Публикация в npm
+        if: steps.registry.outputs.published == 'false'
+        run: npm publish --access public
+
+      - name: GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            echo "Релиз $GITHUB_REF_NAME уже создан — шаг пропущен"
+            exit 0
+          fi
+          gh release create "$GITHUB_REF_NAME" \
+            --title "$GITHUB_REF_NAME" \
+            --generate-notes

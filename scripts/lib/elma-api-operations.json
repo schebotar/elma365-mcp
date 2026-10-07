@@ -1,0 +1,778 @@
+{
+  "source": "https://api.elma365.com/ru/api-v1-doc.json",
+  "fetchedAt": "2026-10-07",
+  "apiVersion": "1.0.1.dev",
+  "total": 154,
+  "operations": [
+    {
+      "method": "GET",
+      "path": "/app/{namespace}/{code}/{id}/get",
+      "operationId": "appItemGetGET"
+    },
+    {
+      "method": "POST",
+      "path": "/app/{namespace}/{code}/{id}/get",
+      "operationId": "appItemGet"
+    },
+    {
+      "method": "POST",
+      "path": "/app/{namespace}/{code}/{id}/set-status",
+      "operationId": "appItemSetStatus"
+    },
+    {
+      "method": "POST",
+      "path": "/app/{namespace}/{code}/{id}/update",
+      "operationId": "appItemUpdate"
+    },
+    {
+      "method": "POST",
+      "path": "/app/{namespace}/{code}/create",
+      "operationId": "appItemCreate"
+    },
+    {
+      "method": "POST",
+      "path": "/app/{namespace}/{code}/import",
+      "operationId": "appImport"
+    },
+    {
+      "method": "POST",
+      "path": "/app/{namespace}/{code}/import/status",
+      "operationId": "appGetImportStatus"
+    },
+    {
+      "method": "GET",
+      "path": "/app/{namespace}/{code}/list",
+      "operationId": "appListGET"
+    },
+    {
+      "method": "POST",
+      "path": "/app/{namespace}/{code}/list",
+      "operationId": "appList"
+    },
+    {
+      "method": "GET",
+      "path": "/app/{namespace}/{code}/settings/status",
+      "operationId": "appGetStatus"
+    },
+    {
+      "method": "POST",
+      "path": "/app/items/batch",
+      "operationId": "appItemsSaveBatch"
+    },
+    {
+      "method": "GET",
+      "path": "/app/list",
+      "operationId": "appViewListGET"
+    },
+    {
+      "method": "PUT",
+      "path": "/bpm/instance/{id}/context",
+      "operationId": "bpmInstanceContext"
+    },
+    {
+      "method": "GET",
+      "path": "/bpm/instance/{id}/get",
+      "operationId": "bpmInstanceGetGET"
+    },
+    {
+      "method": "POST",
+      "path": "/bpm/instance/{id}/get",
+      "operationId": "bpmInstanceGet"
+    },
+    {
+      "method": "POST",
+      "path": "/bpm/instance/{id}/interrupt",
+      "operationId": "bpmInstanceInterrupt"
+    },
+    {
+      "method": "POST",
+      "path": "/bpm/instance/{id}/restart-step",
+      "operationId": "bpmInstanceRestartStep"
+    },
+    {
+      "method": "POST",
+      "path": "/bpm/instance/{id}/skip-step",
+      "operationId": "bpmInstanceSkipStep"
+    },
+    {
+      "method": "POST",
+      "path": "/bpm/instance/{id}/version",
+      "operationId": "bpmInstanceUpdate"
+    },
+    {
+      "method": "GET",
+      "path": "/bpm/instance/bytarget/list",
+      "operationId": "bpmInstanceTargetListGET"
+    },
+    {
+      "method": "POST",
+      "path": "/bpm/instance/bytarget/list",
+      "operationId": "bpmInstanceTargetList"
+    },
+    {
+      "method": "GET",
+      "path": "/bpm/instance/bytemplate/{namespace}/{code}/list",
+      "operationId": "bpmInstanceListByCodeGET"
+    },
+    {
+      "method": "POST",
+      "path": "/bpm/instance/bytemplate/{namespace}/{code}/list",
+      "operationId": "bpmInstanceListByCode"
+    },
+    {
+      "method": "POST",
+      "path": "/bpm/instance/bytemplate/{namespace}/{code}/version",
+      "operationId": "bpmInstanceBulkUpdate"
+    },
+    {
+      "method": "GET",
+      "path": "/bpm/instance/bytemplateid/{id}/list",
+      "operationId": "bpmInstanceListGET"
+    },
+    {
+      "method": "POST",
+      "path": "/bpm/instance/bytemplateid/{id}/list",
+      "operationId": "bpmInstanceList"
+    },
+    {
+      "method": "POST",
+      "path": "/bpm/instance/interrupt",
+      "operationId": "bpmInstanceBulkInterrupt"
+    },
+    {
+      "method": "POST",
+      "path": "/bpm/instance/restart-step",
+      "operationId": "bpmInstanceBulkRestartStep"
+    },
+    {
+      "method": "POST",
+      "path": "/bpm/instance/skip-step",
+      "operationId": "bpmInstanceBulkSkipStep"
+    },
+    {
+      "method": "POST",
+      "path": "/bpm/restore-point/{id}/restore",
+      "operationId": "bpmRestorePointRestore"
+    },
+    {
+      "method": "POST",
+      "path": "/bpm/template/{namespace}/{code}/run",
+      "operationId": "bpmTemplateRun"
+    },
+    {
+      "method": "GET",
+      "path": "/channel",
+      "operationId": "ListChannel"
+    },
+    {
+      "method": "POST",
+      "path": "/channel/{channel}/message",
+      "operationId": "SendChannelMessage"
+    },
+    {
+      "method": "POST",
+      "path": "/channel/{channel}/message/{id}/comment",
+      "operationId": "SendChannelComment"
+    },
+    {
+      "method": "GET",
+      "path": "/channel/{channel}/message/{id}/comment/list",
+      "operationId": "ListChannelCommentGet"
+    },
+    {
+      "method": "POST",
+      "path": "/channel/{channel}/message/{id}/comment/list",
+      "operationId": "ListChannelComment"
+    },
+    {
+      "method": "GET",
+      "path": "/channel/{channel}/message/list",
+      "operationId": "ListChannelMessageGet"
+    },
+    {
+      "method": "POST",
+      "path": "/channel/{channel}/message/list",
+      "operationId": "ListChannelMessage"
+    },
+    {
+      "method": "GET",
+      "path": "/contracts/{namespace}/{code}/{id}/get",
+      "operationId": "contractsItemGet"
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/{namespace}/{code}/{id}/get",
+      "operationId": "contractsItemGetPost"
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/{namespace}/{code}/{id}/update",
+      "operationId": "contractsItemUpdate"
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/{namespace}/{code}/create",
+      "operationId": "contractsItemCreate"
+    },
+    {
+      "method": "GET",
+      "path": "/contracts/{namespace}/{code}/list",
+      "operationId": "contractsListGet"
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/{namespace}/{code}/list",
+      "operationId": "contractsList"
+    },
+    {
+      "method": "POST",
+      "path": "/disk/directory",
+      "operationId": "directoryCreate"
+    },
+    {
+      "method": "GET",
+      "path": "/disk/directory/{id}",
+      "operationId": "getDirectory"
+    },
+    {
+      "method": "POST",
+      "path": "/disk/directory/{id}/upload",
+      "operationId": "uploadToDirectory"
+    },
+    {
+      "method": "GET",
+      "path": "/disk/directory/list",
+      "operationId": "directoryListGET"
+    },
+    {
+      "method": "POST",
+      "path": "/disk/directory/list",
+      "operationId": "directoryList"
+    },
+    {
+      "method": "GET",
+      "path": "/disk/file/{id}",
+      "operationId": "getFile"
+    },
+    {
+      "method": "GET",
+      "path": "/disk/file/{id}/get-link",
+      "operationId": "handlerGetLinkGET"
+    },
+    {
+      "method": "POST",
+      "path": "/disk/file/{id}/get-link",
+      "operationId": "handlerGetLink"
+    },
+    {
+      "method": "POST",
+      "path": "/disk/file/move",
+      "operationId": "persistOrMoveFileToDirectory"
+    },
+    {
+      "method": "POST",
+      "path": "/disk/file/upload",
+      "operationId": "uploadPart"
+    },
+    {
+      "method": "POST",
+      "path": "/disk/files",
+      "operationId": "persistFiles"
+    },
+    {
+      "method": "PATCH",
+      "path": "/disk/files/deleted",
+      "operationId": "deleteFiles"
+    },
+    {
+      "method": "POST",
+      "path": "/disk/files/search",
+      "operationId": "searchFiles"
+    },
+    {
+      "method": "POST",
+      "path": "/disk/links/download",
+      "operationId": "downloadLinks"
+    },
+    {
+      "method": "POST",
+      "path": "/disk/links/upload",
+      "operationId": "uploadLinks"
+    },
+    {
+      "method": "POST",
+      "path": "/disk/uploads/from-link",
+      "operationId": "uploadFromLinks"
+    },
+    {
+      "method": "POST",
+      "path": "/docflow/{namespace}/{code}/{id}/lists",
+      "operationId": "docflowListRequest"
+    },
+    {
+      "method": "POST",
+      "path": "/feed/{namespace}/{code}/{target}/message",
+      "operationId": "SendMessage"
+    },
+    {
+      "method": "POST",
+      "path": "/feed/{namespace}/{code}/{target}/message/{id}/comment",
+      "operationId": "SendComment"
+    },
+    {
+      "method": "GET",
+      "path": "/feed/{namespace}/{code}/{target}/message/{id}/comment/list",
+      "operationId": "ListCommentGet"
+    },
+    {
+      "method": "POST",
+      "path": "/feed/{namespace}/{code}/{target}/message/{id}/comment/list",
+      "operationId": "ListComment"
+    },
+    {
+      "method": "GET",
+      "path": "/feed/{namespace}/{code}/{target}/message/list",
+      "operationId": "ListMessageGet"
+    },
+    {
+      "method": "POST",
+      "path": "/feed/{namespace}/{code}/{target}/message/list",
+      "operationId": "ListMessage"
+    },
+    {
+      "method": "POST",
+      "path": "/help",
+      "operationId": "help"
+    },
+    {
+      "method": "GET",
+      "path": "/integration/{code}/voip/bindings",
+      "operationId": "getVoipBindings"
+    },
+    {
+      "method": "PUT",
+      "path": "/integration/{code}/voip/bindings",
+      "operationId": "updateVoipBindings"
+    },
+    {
+      "method": "POST",
+      "path": "/marketing/segment",
+      "operationId": "segmentList"
+    },
+    {
+      "method": "PUT",
+      "path": "/marketing/segment",
+      "operationId": "createSegment"
+    },
+    {
+      "method": "GET",
+      "path": "/marketing/segment/{id}",
+      "operationId": "segmentGet"
+    },
+    {
+      "method": "POST",
+      "path": "/marketing/segment/{id}/subscribers",
+      "operationId": "segmentSubscribersList"
+    },
+    {
+      "method": "PATCH",
+      "path": "/marketing/segment/{id}/subscribers/add",
+      "operationId": "addSegmentSubscribers"
+    },
+    {
+      "method": "PATCH",
+      "path": "/marketing/segment/{id}/subscribers/remove",
+      "operationId": "deleteSegmentSubscribers"
+    },
+    {
+      "method": "POST",
+      "path": "/marketing/subscriber",
+      "operationId": "subscribersList"
+    },
+    {
+      "method": "GET",
+      "path": "/nomenclature",
+      "operationId": "list"
+    },
+    {
+      "method": "POST",
+      "path": "/nomenclature",
+      "operationId": "create"
+    },
+    {
+      "method": "PUT",
+      "path": "/nomenclature/{id}",
+      "operationId": "Update"
+    },
+    {
+      "method": "GET",
+      "path": "/nomenclature/directory",
+      "operationId": "directory_list"
+    },
+    {
+      "method": "POST",
+      "path": "/nomenclature/directory",
+      "operationId": "directory_create"
+    },
+    {
+      "method": "PUT",
+      "path": "/nomenclature/directory/{id}",
+      "operationId": "directory_update"
+    },
+    {
+      "method": "POST",
+      "path": "/registration/{namespace}/{code}/{id}",
+      "operationId": "registrationListRequest"
+    },
+    {
+      "method": "GET",
+      "path": "/reports/{namespace}/{code}/list",
+      "operationId": "reportsListGET"
+    },
+    {
+      "method": "POST",
+      "path": "/reports/{namespace}/{code}/list",
+      "operationId": "reportsList"
+    },
+    {
+      "method": "GET",
+      "path": "/scheme/doctemplates/{id}",
+      "operationId": "docTemplateEntityGetByID"
+    },
+    {
+      "method": "DELETE",
+      "path": "/scheme/groups/{id}",
+      "operationId": "deleteRequest"
+    },
+    {
+      "method": "GET",
+      "path": "/scheme/groups/{id}",
+      "operationId": "groupGetByID"
+    },
+    {
+      "method": "PUT",
+      "path": "/scheme/groups/{id}",
+      "operationId": "updateRequest"
+    },
+    {
+      "method": "POST",
+      "path": "/scheme/groups/{id}/add-items",
+      "operationId": "addOrgunitsRequest"
+    },
+    {
+      "method": "GET",
+      "path": "/scheme/groups/{id}/parent-groups",
+      "operationId": "getParentGroupsRequest"
+    },
+    {
+      "method": "GET",
+      "path": "/scheme/groups/{id}/positions",
+      "operationId": "getSubPositionsRequest"
+    },
+    {
+      "method": "POST",
+      "path": "/scheme/groups/{id}/remove-items",
+      "operationId": "removeOrgunitsRequest"
+    },
+    {
+      "method": "GET",
+      "path": "/scheme/groups/{id}/sub-groups",
+      "operationId": "getSubGroupsRequest"
+    },
+    {
+      "method": "GET",
+      "path": "/scheme/groups/{id}/users",
+      "operationId": "getSubUsersRequest"
+    },
+    {
+      "method": "GET",
+      "path": "/scheme/groups/list",
+      "operationId": "listByFilterRequestGET"
+    },
+    {
+      "method": "POST",
+      "path": "/scheme/groups/list",
+      "operationId": "listByFilterRequest"
+    },
+    {
+      "method": "GET",
+      "path": "/scheme/modules",
+      "operationId": "moduleEntityList"
+    },
+    {
+      "method": "GET",
+      "path": "/scheme/modules/{id}",
+      "operationId": "moduleGetByID"
+    },
+    {
+      "method": "GET",
+      "path": "/scheme/modules/{id}/exportable",
+      "operationId": "moduleEntityExportable"
+    },
+    {
+      "method": "GET",
+      "path": "/scheme/namespaces",
+      "operationId": "namespaceEntityList"
+    },
+    {
+      "method": "GET",
+      "path": "/scheme/namespaces/{code}/exportable",
+      "operationId": "namespaceEntityExportable"
+    },
+    {
+      "method": "GET",
+      "path": "/scheme/namespaces/{namespace}",
+      "operationId": "namespaceEntityGet"
+    },
+    {
+      "method": "GET",
+      "path": "/scheme/namespaces/{namespace}/apps",
+      "operationId": "applicationEntityList"
+    },
+    {
+      "method": "GET",
+      "path": "/scheme/namespaces/{namespace}/apps/{code}",
+      "operationId": "applicationEntityGet"
+    },
+    {
+      "method": "GET",
+      "path": "/scheme/namespaces/{namespace}/apps/{code}/doctemplates",
+      "operationId": "appDocTemplateEntityList"
+    },
+    {
+      "method": "GET",
+      "path": "/scheme/namespaces/{namespace}/apps/{code}/exportable",
+      "operationId": "applicationEntityExportable"
+    },
+    {
+      "method": "GET",
+      "path": "/scheme/namespaces/{namespace}/apps/{code}/groups",
+      "operationId": "applicationGroupList"
+    },
+    {
+      "method": "GET",
+      "path": "/scheme/namespaces/{namespace}/apps/{code}/processes",
+      "operationId": "applicationProcessList"
+    },
+    {
+      "method": "GET",
+      "path": "/scheme/namespaces/{namespace}/contracts",
+      "operationId": "contractEntityList"
+    },
+    {
+      "method": "GET",
+      "path": "/scheme/namespaces/{namespace}/contracts/{code}",
+      "operationId": "contractEntityGet"
+    },
+    {
+      "method": "GET",
+      "path": "/scheme/namespaces/{namespace}/doctemplates",
+      "operationId": "docTemplateEntityList"
+    },
+    {
+      "method": "GET",
+      "path": "/scheme/namespaces/{namespace}/groups",
+      "operationId": "getListByNamespaceRequest"
+    },
+    {
+      "method": "POST",
+      "path": "/scheme/namespaces/{namespace}/groups",
+      "operationId": "groupCreate"
+    },
+    {
+      "method": "GET",
+      "path": "/scheme/namespaces/{namespace}/pages",
+      "operationId": "pageEntityList"
+    },
+    {
+      "method": "GET",
+      "path": "/scheme/namespaces/{namespace}/processes",
+      "operationId": "processList"
+    },
+    {
+      "method": "GET",
+      "path": "/scheme/namespaces/{namespace}/processes/{code}",
+      "operationId": "processGet"
+    },
+    {
+      "method": "GET",
+      "path": "/scheme/namespaces/{namespace}/processes/{code}/forms",
+      "operationId": "processFormList"
+    },
+    {
+      "method": "GET",
+      "path": "/scheme/namespaces/{namespace}/reports",
+      "operationId": "reportEntityList"
+    },
+    {
+      "method": "GET",
+      "path": "/scheme/namespaces/{namespace}/reports/{code}",
+      "operationId": "reportEntityGet"
+    },
+    {
+      "method": "GET",
+      "path": "/scheme/namespaces/{namespace}/widgets",
+      "operationId": "widgetEntityList"
+    },
+    {
+      "method": "GET",
+      "path": "/scheme/namespaces/{namespace}/widgets/{code}",
+      "operationId": "widgetEntityGet"
+    },
+    {
+      "method": "GET",
+      "path": "/scheme/pages/{id}",
+      "operationId": "pageEntityGetByID"
+    },
+    {
+      "method": "GET",
+      "path": "/scheme/solutions",
+      "operationId": "solutionEntityList"
+    },
+    {
+      "method": "GET",
+      "path": "/scheme/solutions/{code}",
+      "operationId": "solutionEntityGet"
+    },
+    {
+      "method": "GET",
+      "path": "/scheme/solutions/{code}/exportable",
+      "operationId": "solutionEntityExportable"
+    },
+    {
+      "method": "DELETE",
+      "path": "/storage/{namespace}/{code}/{key}",
+      "operationId": "applicationStorageDelete"
+    },
+    {
+      "method": "GET",
+      "path": "/storage/{namespace}/{code}/{key}",
+      "operationId": "applicationStorageGet"
+    },
+    {
+      "method": "POST",
+      "path": "/storage/{namespace}/{code}/{key}",
+      "operationId": "applicationStorageSet"
+    },
+    {
+      "method": "DELETE",
+      "path": "/storage/{namespace}/{key}",
+      "operationId": "namespaceStorageDelete"
+    },
+    {
+      "method": "GET",
+      "path": "/storage/{namespace}/{key}",
+      "operationId": "namespaceStorageGet"
+    },
+    {
+      "method": "POST",
+      "path": "/storage/{namespace}/{key}",
+      "operationId": "namespaceStorageSet"
+    },
+    {
+      "method": "DELETE",
+      "path": "/storage/system/{key}",
+      "operationId": "systemStorageDelete"
+    },
+    {
+      "method": "GET",
+      "path": "/storage/system/{key}",
+      "operationId": "systemStorageGet"
+    },
+    {
+      "method": "POST",
+      "path": "/storage/system/{key}",
+      "operationId": "systemStorageSet"
+    },
+    {
+      "method": "POST",
+      "path": "/tasks/{id}/dates",
+      "operationId": "tasksChangeDates"
+    },
+    {
+      "method": "GET",
+      "path": "/tasks/{id}/exits",
+      "operationId": "tasksExits"
+    },
+    {
+      "method": "GET",
+      "path": "/tasks/{id}/get",
+      "operationId": "tasksGet"
+    },
+    {
+      "method": "POST",
+      "path": "/tasks/{id}/percent",
+      "operationId": "tasksChangePercent"
+    },
+    {
+      "method": "POST",
+      "path": "/tasks/{id}/reassign",
+      "operationId": "tasksReassign"
+    },
+    {
+      "method": "PUT",
+      "path": "/tasks/{id}/submit",
+      "operationId": "tasksSubmit"
+    },
+    {
+      "method": "GET",
+      "path": "/tasks/list",
+      "operationId": "tasksListGET"
+    },
+    {
+      "method": "POST",
+      "path": "/tasks/list",
+      "operationId": "tasksList"
+    },
+    {
+      "method": "GET",
+      "path": "/tasks/list/income",
+      "operationId": "tasksListIncomeGET"
+    },
+    {
+      "method": "POST",
+      "path": "/tasks/list/income",
+      "operationId": "tasksListIncome"
+    },
+    {
+      "method": "GET",
+      "path": "/tasks/list/of/{id}",
+      "operationId": "tasksListOfUserGET"
+    },
+    {
+      "method": "POST",
+      "path": "/tasks/list/of/{id}",
+      "operationId": "tasksListOfUser"
+    },
+    {
+      "method": "GET",
+      "path": "/tasks/list/outcome",
+      "operationId": "tasksListOutcomeGET"
+    },
+    {
+      "method": "POST",
+      "path": "/tasks/list/outcome",
+      "operationId": "tasksListOutcome"
+    },
+    {
+      "method": "GET",
+      "path": "/tasks/list/participate",
+      "operationId": "tasksListParticipateGET"
+    },
+    {
+      "method": "POST",
+      "path": "/tasks/list/participate",
+      "operationId": "tasksListParticipate"
+    },
+    {
+      "method": "GET",
+      "path": "/user/list",
+      "operationId": "userListGET"
+    },
+    {
+      "method": "POST",
+      "path": "/user/list",
+      "operationId": "userListPOST"
+    }
+  ]
+}

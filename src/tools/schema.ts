@@ -215,7 +215,7 @@ export async function handleGetAppFields(
 export const getProcessTemplatesSchema = z.object({
   namespace: z
     .string()
-    .describe("Код раздела (namespace), например 'contract_management'"),
+    .describe("Код раздела (namespace), например 'example_namespace'"),
   code: z
     .string()
     .optional()

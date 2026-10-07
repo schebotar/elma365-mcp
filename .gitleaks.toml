@@ -1,0 +1,22 @@
+title = "elma365-mcp"
+
+# Базовые правила gitleaks плюс послабления для очевидных placeholder'ов
+# из .env.example и артефактов сборки.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Placeholder'ы и артефакты сборки"
+paths = [
+    '''node_modules''',
+    '''dist''',
+    '''package-lock\.json''',
+]
+regexes = [
+    '''your-company''',
+    '''your-bearer-token''',
+    '''sk-your-''',
+    '''change-me-to''',
+    '''example\.invalid''',
+    '''11111111-1111-1111-1111-111111111111''',
+]

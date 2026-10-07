@@ -7,6 +7,9 @@ dist/
 *.d.ts.map
 *.tsbuildinfo
 
+# Package tarballs
+*.tgz
+
 # Secrets & env
 .env
 

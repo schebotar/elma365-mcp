@@ -1,0 +1,48 @@
+# Проверки на каждый pull request и на push в master.
+# Ошибку в workflow иначе видно только в момент релиза — ловим её здесь же.
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0 # gitleaks нужна вся история
+
+      - name: Проверка workflow-файлов
+        run: |
+          bash <(curl -sSfL https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
+          ./actionlint -color
+
+      # Ищет секреты в рабочем дереве и во всей истории коммитов.
+      # Для репозиториев в организации задайте секрет GITLEAKS_LICENSE.
+      - name: Поиск утечек
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Зависимости
+        run: npm ci
+
+      - name: Типы и инвентарь инструментов
+        run: npm run check
+
+      - name: Старт сервера по stdio
+        run: npm run smoke
+
+      - name: Покрытие публичного API
+        run: npm run coverage
