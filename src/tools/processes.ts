@@ -157,3 +157,50 @@ export async function handleInterruptProcessInstance(
 
   return JSON.stringify({ interrupted: true, result: obj }, null, 2);
 }
+
+// ─── update_process_instance_context ─────────────────────────────
+
+export const updateProcessInstanceContextSchema = z.object({
+  id: z.string().describe("UUID экземпляра процесса"),
+  comment: z.string().describe("Причина изменения контекста (обязательное поле)"),
+  context: z.record(z.unknown()).describe("Новый контекст бизнес-процесса"),
+});
+
+export async function handleUpdateProcessInstanceContext(
+  params: z.infer<typeof updateProcessInstanceContextSchema>,
+): Promise<string> {
+  const result = await elmaRequest("PUT", `bpm/instance/${params.id}/context`, {
+    comment: params.comment,
+    context: params.context,
+  });
+
+  const obj = (result ?? {}) as Record<string, unknown>;
+  if (obj.success === false) {
+    return apiError(obj);
+  }
+
+  return JSON.stringify({ updated: true, result: obj }, null, 2);
+}
+
+// ─── skip_process_instance_step ──────────────────────────────────
+
+export const skipProcessInstanceStepSchema = z.object({
+  id: z.string().describe("UUID экземпляра процесса"),
+});
+
+export async function handleSkipProcessInstanceStep(
+  params: z.infer<typeof skipProcessInstanceStepSchema>,
+): Promise<string> {
+  const result = await elmaRequest(
+    "POST",
+    `bpm/instance/${params.id}/skip-step`,
+    {},
+  );
+
+  const obj = (result ?? {}) as Record<string, unknown>;
+  if (obj.success === false) {
+    return apiError(obj);
+  }
+
+  return JSON.stringify({ skipped: true, result: obj }, null, 2);
+}

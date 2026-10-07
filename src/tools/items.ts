@@ -155,4 +155,40 @@ export async function handleRestoreAppItem(
   return writeResult(result);
 }
 
+// ─── save_app_items_batch ────────────────────────────────────────
+
+export const saveAppItemsBatchSchema = z.object({
+  items: z
+    .array(
+      z.object({
+        namespace: z.string().describe("Код раздела (namespace)"),
+        code: z.string().describe("Код приложения"),
+        context: z
+          .record(z.unknown())
+          .describe(
+            "Поля элемента. Для связывания элементов между собой используйте псевдоидентификаторы " +
+              "'$ref/xxxx' в поле __id и в ссылочных полях.",
+          ),
+      }),
+    )
+    .describe("Список создаваемых элементов (сохраняются в единой транзакции)"),
+  withEventHandlers: z
+    .boolean()
+    .optional()
+    .describe("Запустить обработчики событий (по умолчанию false)"),
+});
+
+export async function handleSaveAppItemsBatch(
+  params: z.infer<typeof saveAppItemsBatchSchema>,
+): Promise<string> {
+  const body: Record<string, unknown> = { items: params.items };
+  if (params.withEventHandlers !== undefined) {
+    body.withEventHandlers = params.withEventHandlers;
+  }
+
+  const result = await elmaRequest("POST", "app/items/batch", body);
+
+  return JSON.stringify(result, null, 2);
+}
+
 

@@ -209,3 +209,53 @@ export async function handleGetAppFields(
 
   return JSON.stringify({ fields: compact }, null, 2);
 }
+
+// ─── get_process_templates ───────────────────────────────────────
+
+export const getProcessTemplatesSchema = z.object({
+  namespace: z
+    .string()
+    .describe("Код раздела (namespace), например 'contract_management'"),
+  code: z
+    .string()
+    .optional()
+    .describe("Код приложения. Если указан — только шаблоны процессов этого приложения."),
+});
+
+export async function handleGetProcessTemplates(
+  params: z.infer<typeof getProcessTemplatesSchema>,
+): Promise<string> {
+  const endpoint = params.code
+    ? `scheme/namespaces/${params.namespace}/apps/${params.code}/processes`
+    : `scheme/namespaces/${params.namespace}/processes`;
+
+  const result = (await elmaRequest("GET", endpoint)) as Record<string, unknown>;
+
+  if (result.success === false) {
+    return JSON.stringify(
+      { error: String(result.error ?? "Неизвестная ошибка API") },
+      null,
+      2,
+    );
+  }
+
+  const root = (result.result ?? result) as unknown;
+  let list: unknown[] = [];
+  if (Array.isArray(root)) {
+    list = root;
+  } else if (
+    root &&
+    typeof root === "object" &&
+    Array.isArray((root as Record<string, unknown>).result)
+  ) {
+    list = (root as Record<string, unknown>).result as unknown[];
+  }
+
+  const processes = (list as Array<Record<string, unknown>>).map((p) => ({
+    code: String(p.code ?? p.__code ?? ""),
+    name: String(p.name ?? p.__name ?? p.title ?? ""),
+    type: String(p.type ?? p.__type ?? ""),
+  }));
+
+  return JSON.stringify({ total: processes.length, processes }, null, 2);
+}

@@ -17,6 +17,8 @@ import {
   handleGetAppStatuses,
   getAppFieldsSchema,
   handleGetAppFields,
+  getProcessTemplatesSchema,
+  handleGetProcessTemplates,
 } from "./tools/schema.js";
 
 // Search tools
@@ -53,6 +55,8 @@ import {
   handleDeleteAppItem,
   restoreAppItemSchema,
   handleRestoreAppItem,
+  saveAppItemsBatchSchema,
+  handleSaveAppItemsBatch,
 } from "./tools/items.js";
 
 // Process (BPM) tools
@@ -65,9 +69,13 @@ import {
   handleGetProcessInstance,
   interruptProcessInstanceSchema,
   handleInterruptProcessInstance,
+  updateProcessInstanceContextSchema,
+  handleUpdateProcessInstanceContext,
+  skipProcessInstanceStepSchema,
+  handleSkipProcessInstanceStep,
 } from "./tools/processes.js";
 
-const TOOL_COUNT = 18;
+const TOOL_COUNT = 22;
 
 export function createServer(): McpServer {
   const server = new McpServer({
@@ -77,12 +85,14 @@ export function createServer(): McpServer {
 
   // ── Discovery ──────────────────────────────────────────────────
 
-  server.tool(
+  server.registerTool(
     "discover_apps",
+    { description:
     "Получить список всех приложений ELMA365 с их кодами и названиями. " +
       "Используется для поиска нужного namespace и code приложения по его названию. " +
       "Можно отфильтровать по разделу (namespace).",
-    discoverAppsSchema.shape,
+      inputSchema: discoverAppsSchema.shape,
+    },
     async (params) => ({
       content: [{ type: "text", text: await handleDiscoverApps(params) }],
     }),
@@ -90,70 +100,94 @@ export function createServer(): McpServer {
 
   // ── Schema ─────────────────────────────────────────────────────
 
-  server.tool(
+  server.registerTool(
     "get_app_schema",
+    { description:
     "Получить полную схему приложения: поля с типами, обязательностью, признаками; " +
       "формы создания/просмотра/редактирования с наборами полей. " +
       "Используй перед построением EQL-запроса, чтобы узнать доступные поля и их типы.",
-    getAppSchemaSchema.shape,
+      inputSchema: getAppSchemaSchema.shape,
+    },
     async (params) => ({
       content: [{ type: "text", text: await handleGetAppSchema(params) }],
     }),
   );
 
-  server.tool(
+  server.registerTool(
     "get_app_statuses",
+    { description:
     "Получить группы статусов и варианты статусов приложения. " +
       "Полезно для фильтрации элементов по статусу или для смены статуса.",
-    getAppStatusesSchema.shape,
+      inputSchema: getAppStatusesSchema.shape,
+    },
     async (params) => ({
       content: [{ type: "text", text: await handleGetAppStatuses(params) }],
     }),
   );
 
-  server.tool(
+  server.registerTool(
     "get_app_fields",
+    { description:
     "Получить компактный список полей приложения (только code, type, required, array, title). " +
       "Облегчённая версия get_app_schema — используй когда нужны только имена и типы полей для EQL. " +
       "Работает быстро (кэш).",
-    getAppFieldsSchema.shape,
+      inputSchema: getAppFieldsSchema.shape,
+    },
     async (params) => ({
       content: [{ type: "text", text: await handleGetAppFields(params) }],
     }),
   );
 
-  // ── Users ──────────────────────────────────────────────────────
+  server.registerTool(
+    "get_process_templates",
+    { description:
+    "Получить список шаблонов процессов (workflow) раздела или приложения. " +
+      "Возвращает коды и названия — используй перед run_process или search_process_instances, чтобы узнать код процесса.",
+      inputSchema: getProcessTemplatesSchema.shape,
+    },
+    async (params) => ({
+      content: [{ type: "text", text: await handleGetProcessTemplates(params) }],
+    }),
+  );
 
   // ── Users ──────────────────────────────────────────────────────
 
-  server.tool(
+  // ── Users ──────────────────────────────────────────────────────
+
+  server.registerTool(
     "search_users",
+    { description:
     "Поиск пользователей ELMA365. Поддерживает фильтрацию по фамилии (fullname.lastname), " +
       "email, логину, идентификатору и другим полям. " +
       "Используй этот инструмент вместо кросс-подзапроса к _system_catalogs.employee в EQL.",
-    searchUsersSchema.shape,
+      inputSchema: searchUsersSchema.shape,
+    },
     async (params) => ({
       content: [{ type: "text", text: await handleSearchUsers(params) }],
     }),
   );
 
-  server.tool(
+  server.registerTool(
     "get_user",
+    { description:
     "Получить данные одного пользователя по его UUID. " +
       "Возвращает ФИО, email, логин, должность, телефон, даты приёма/рождения.",
-    getUserSchema.shape,
+      inputSchema: getUserSchema.shape,
+    },
     async (params) => ({
       content: [{ type: "text", text: await handleGetUser(params) }],
     }),
   );
 
-  server.tool(
+  server.registerTool(
     "search_employees",
+    { description:
     "Поиск сотрудников в системном справочнике _system_catalogs.employee. " +
       "Используй, чтобы получить id сотрудника по email/имени для ссылочных полей " +
       "(например contract_manager_employee_multiport). " +
       "Отличается от search_users: там пользователи (user/list), здесь сотрудники (справочник).",
-    searchEmployeesSchema.shape,
+      inputSchema: searchEmployeesSchema.shape,
+    },
     async (params) => ({
       content: [{ type: "text", text: await handleSearchEmployees(params) }],
     }),
@@ -161,8 +195,9 @@ export function createServer(): McpServer {
 
   // ── Search ─────────────────────────────────────────────────────
 
-  server.tool(
+  server.registerTool(
     "search_app_items",
+    { description:
     "Поиск элементов приложения через EQL-запрос. Основной инструмент — все фильтры в одном запросе, " +
       "без цепочек вызовов. Кросс-приложенческие подзапросы позволяют ссылаться на другие приложения " +
       "прямо в условии.\n\n" +
@@ -279,7 +314,8 @@ export function createServer(): McpServer {
       "    [bill] = Refitem('documents', 'bills', '018a8dbb-04cd-7798-a363-aae245148b10') — конкретный счёт\n" +
       "    [contract] = 'clients:contracts:018a8dbb-...' — альтернативная строковая запись\n" +
       "- Системные поля: __id, __createdAt, __createdBy, __updatedAt, __updatedBy, __name, __status (числовой ID статуса)",
-    searchAppItemsSchema.shape,
+      inputSchema: searchAppItemsSchema.shape,
+    },
     async (params) => ({
       content: [{ type: "text", text: await handleSearchAppItems(params) }],
     }),
@@ -287,101 +323,155 @@ export function createServer(): McpServer {
 
   // ── CRUD ───────────────────────────────────────────────────────
 
-  server.tool(
+  server.registerTool(
     "get_app_item",
+    { description:
     "Получить один элемент приложения по его UUID.",
-    getAppItemSchema.shape,
+      inputSchema: getAppItemSchema.shape,
+    },
     async (params) => ({
       content: [{ type: "text", text: await handleGetAppItem(params) }],
     }),
   );
 
-  server.tool(
+  server.registerTool(
     "create_app_item",
+    { description:
     "Создать новый элемент приложения. Перед созданием вызови get_app_schema или get_app_fields, " +
       "чтобы узнать обязательные поля и их типы.",
-    createAppItemSchema.shape,
+      inputSchema: createAppItemSchema.shape,
+    },
     async (params) => ({
       content: [{ type: "text", text: await handleCreateAppItem(params) }],
     }),
   );
 
-  server.tool(
+  server.registerTool(
     "update_app_item",
+    { description:
     "Обновить поля существующего элемента приложения. Передаются только изменяемые поля.",
-    updateAppItemSchema.shape,
+      inputSchema: updateAppItemSchema.shape,
+    },
     async (params) => ({
       content: [{ type: "text", text: await handleUpdateAppItem(params) }],
     }),
   );
 
-  server.tool(
+  server.registerTool(
     "set_app_item_status",
+    { description:
     "Сменить статус элемента приложения. Коды статусов узнай через get_app_statuses.",
-    setAppItemStatusSchema.shape,
+      inputSchema: setAppItemStatusSchema.shape,
+    },
     async (params) => ({
       content: [{ type: "text", text: await handleSetAppItemStatus(params) }],
     }),
   );
 
-  server.tool(
+  server.registerTool(
     "delete_app_item",
+    { description:
     "Удалить элемент приложения (мягкое удаление — проставляется поле __deletedAt). " +
       "Отдельного эндпоинта удаления в API нет, поэтому используется update с __deletedAt. " +
       "Восстановить можно через restore_app_item.",
-    deleteAppItemSchema.shape,
+      inputSchema: deleteAppItemSchema.shape,
+    },
     async (params) => ({
       content: [{ type: "text", text: await handleDeleteAppItem(params) }],
     }),
   );
 
-  server.tool(
+  server.registerTool(
     "restore_app_item",
+    { description:
     "Восстановить удалённый элемент (сброс __deletedAt в null). " +
       "Если сброс не восстанавливает элемент полностью, используй run_process с admin_restoration_workflow.",
-    restoreAppItemSchema.shape,
+      inputSchema: restoreAppItemSchema.shape,
+    },
     async (params) => ({
       content: [{ type: "text", text: await handleRestoreAppItem(params) }],
     }),
   );
 
+  server.registerTool(
+    "save_app_items_batch",
+    { description:
+    "Массовое сохранение элементов разных приложений (в одной транзакции). " +
+      "Для связывания элементов между собой используйте псевдоидентификаторы '$ref/xxxx' в поле __id и ссылочных полях.",
+      inputSchema: saveAppItemsBatchSchema.shape,
+    },
+    async (params) => ({
+      content: [{ type: "text", text: await handleSaveAppItemsBatch(params) }],
+    }),
+  );
+
   // ── BPM (процессы) ─────────────────────────────────────────────
 
-  server.tool(
+  server.registerTool(
     "run_process",
+    { description:
     "Запустить экземпляр процесса (workflow). Возвращает контекст запущенного экземпляра: __id, __state, __createdAt.",
-    runProcessSchema.shape,
+      inputSchema: runProcessSchema.shape,
+    },
     async (params) => ({
       content: [{ type: "text", text: await handleRunProcess(params) }],
     }),
   );
 
-  server.tool(
+  server.registerTool(
     "search_process_instances",
+    { description:
     "Поиск экземпляров процесса по коду шаблона. Контекст экземпляров в выдаче лежит плоско " +
       "(не во вложенном поле context).",
-    searchProcessInstancesSchema.shape,
+      inputSchema: searchProcessInstancesSchema.shape,
+    },
     async (params) => ({
       content: [{ type: "text", text: await handleSearchProcessInstances(params) }],
     }),
   );
 
-  server.tool(
+  server.registerTool(
     "get_process_instance",
+    { description:
     "Получить экземпляр процесса по UUID: состояние (__state), контекст (плоско), " +
       "историю пройденных блоков (__flowHistory).",
-    getProcessInstanceSchema.shape,
+      inputSchema: getProcessInstanceSchema.shape,
+    },
     async (params) => ({
       content: [{ type: "text", text: await handleGetProcessInstance(params) }],
     }),
   );
 
-  server.tool(
+  server.registerTool(
     "interrupt_process_instance",
+    { description:
     "Прервать экземпляр процесса по UUID. Можно указать причину (comment).",
-    interruptProcessInstanceSchema.shape,
+      inputSchema: interruptProcessInstanceSchema.shape,
+    },
     async (params) => ({
       content: [{ type: "text", text: await handleInterruptProcessInstance(params) }],
+    }),
+  );
+
+  server.registerTool(
+    "update_process_instance_context",
+    { description:
+    "Изменить контекст существующего экземпляра процесса. Параметры comment и context обязательны.",
+      inputSchema: updateProcessInstanceContextSchema.shape,
+    },
+    async (params) => ({
+      content: [{ type: "text", text: await handleUpdateProcessInstanceContext(params) }],
+    }),
+  );
+
+  server.registerTool(
+    "skip_process_instance_step",
+    { description:
+    "Пропустить текущий шаг экземпляра процесса. Шаг должен быть в состоянии «Ошибка». Доступно только администратору.",
+      inputSchema: skipProcessInstanceStepSchema.shape,
+    },
+    async (params) => ({
+      content: [{ type: "text", text: await handleSkipProcessInstanceStep(params) }],
     }),
   );
 
