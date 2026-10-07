@@ -101,46 +101,6 @@ ELMA365_DOMAIN=mycompany ELMA365_TOKEN=token npx @chebser/elma365-mcp --http --p
 MCP endpoint (Streamable HTTP / SSE): `http://localhost:3000/mcp`
 Health check: `http://localhost:3000/health`
 
-### Docker-развертывание с LibreChat (чат-агент)
-
-Локальный агент с веб-интерфейсом, DeepSeek и MCP-инструментами ELMA365.
-Запускается в 4 контейнерах через Docker Compose.
-
-```bash
-# 1. Клонировать
-git clone <repo>
-cd elma365-mcp
-
-# 2. Настроить переменные
-cp .env.example .env
-# Заполнить .env: ELMA365_DOMAIN, ELMA365_TOKEN, DEEPSEEK_API_KEY
-
-# 3. Запустить
-docker compose up -d
-```
-
-После запуска:
-- Чат-интерфейс: **http://localhost:3080**
-- При первом входе зарегистрируйтесь (email + пароль)
-- Выберите модель **DeepSeek** в выпадающем списке
-- Спросите, например: «Какие приложения есть в ELMA365?» — агент вызовет `discover_apps` через MCP
-
-Стек:
-```
-librechat (3080) ──→ mongodb
-                 ├─→ meilisearch
-                 └─→ elma365-mcp (3000) ──→ api.elma365.ru
-```
-
-Конфигурация:
-| Файл | Назначение |
-|------|-----------|
-| `.env` | ELMA365, DeepSeek, LibreChat — все переменные |
-| `librechat.yaml` | Подключение DeepSeek и MCP-сервера |
-| `docker-compose.yml` | 4 сервиса (api, mongodb, meilisearch, elma365-mcp) |
-
-
-
 ## Переменные окружения
 
 | Переменная | Описание |

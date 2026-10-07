@@ -21,9 +21,5 @@ npm-debug.log*
 # Test coverage
 coverage/
 
-# Uploads (keep folder, ignore contents)
-uploads/*
-!uploads/.gitkeep
-
 # Tools
 .codewhale/
