@@ -2,7 +2,7 @@
 
 MCP-сервер для [ELMA365](https://elma365.com) API с поддержкой **EQL-поиска** — поиск элементов приложений по произвольным запросам, включая естественный язык через LLM.
 
-**3 инструмента**: discovery приложений, поиск элементов (EQL), чтение элемента.
+**18 инструментов**: чтение схем и элементов, поиск (EQL), пользователи и сотрудники, CRUD элементов (создание, изменение, статус, удаление, восстановление) и работа с процессами (запуск, поиск экземпляров, чтение, прерывание).
 
 ## Возможности
 
@@ -48,6 +48,19 @@ MCP-сервер для [ELMA365](https://elma365.com) API с поддержко
 ```eql
 [performer_user] = 'uuid-исполнителя' and [in_progress] = false
 ```
+
+## Инструменты
+
+| Группа | Инструменты |
+|---|---|
+| Обнаружение и схема | `discover_apps`, `get_app_schema`, `get_app_statuses`, `get_app_fields` |
+| Поиск и чтение | `search_app_items`, `get_app_item` |
+| Пользователи | `search_users`, `get_user`, `search_employees` |
+| CRUD элементов | `create_app_item`, `update_app_item`, `set_app_item_status`, `delete_app_item`, `restore_app_item` |
+| Процессы (BPM) | `run_process`, `search_process_instances`, `get_process_instance`, `interrupt_process_instance` |
+
+Примечание: удаление и восстановление элементов выполняются через `update` с полем `__deletedAt`
+(мягкое удаление) — отдельного эндпоинта удаления в `/pub/v1` нет.
 
 ## Установка
 

@@ -115,3 +115,77 @@ export async function handleGetUser(
 
   return JSON.stringify(user, null, 2);
 }
+
+// ─── search_employees ────────────────────────────────────────────
+
+export const searchEmployeesSchema = z.object({
+  filter: z
+    .record(z.unknown())
+    .optional()
+    .describe(
+      "Структурный фильтр (как в app/list). Примеры:\n" +
+        '- {"and": [{"like": [{"field": "email"}, {"const": "user@example.com"}]}, {"eq": [{"field": "__deletedAt"}, null]}]} — по email среди неудалённых\n' +
+        '- {"eq": [{"field": "__id"}, {"const": "uuid"}]} — по идентификатору\n' +
+        "ВАЖНО: list возвращает и удалённых сотрудников — для «живых» добавляйте условие eq __deletedAt = null.",
+    ),
+  size: z.number().optional().describe("Количество элементов (по умолчанию 50, макс. 10000)"),
+  from: z.number().optional().describe("Смещение для пагинации (по умолчанию 0)"),
+});
+
+function firstRefId(value: unknown): string | null {
+  if (value === undefined || value === null) return null;
+  const list = Array.isArray(value) ? value : [value];
+  for (const entry of list) {
+    if (typeof entry === "string") return entry;
+    if (entry && typeof entry === "object") {
+      const id =
+        (entry as Record<string, unknown>).__id ??
+        (entry as Record<string, unknown>).id;
+      if (id) return String(id);
+    }
+  }
+  return null;
+}
+
+export async function handleSearchEmployees(
+  params: z.infer<typeof searchEmployeesSchema>,
+): Promise<string> {
+  const body: Record<string, unknown> = {
+    size: params.size ?? 50,
+    from: params.from ?? 0,
+  };
+  if (params.filter) {
+    body.filter = params.filter;
+  }
+
+  const result = (await elmaRequest(
+    "POST",
+    "app/_system_catalogs/employee/list",
+    body,
+  )) as Record<string, unknown>;
+
+  if (result.success === false) {
+    return JSON.stringify(
+      { error: String(result.error ?? "Неизвестная ошибка API") },
+      null,
+      2,
+    );
+  }
+
+  const inner = result.result as Record<string, unknown> | undefined;
+  const data = (inner?.result as Array<Record<string, unknown>>) ?? [];
+  const total = (inner?.total as number) ?? data.length;
+
+  const employees = data.map((e) => ({
+    id: String(e.__id ?? ""),
+    name: String(e.__name ?? ""),
+    email: String(e.email ?? ""),
+    userId: firstRefId(e.user),
+    position: e.position != null ? String(e.position) : null,
+    mobilePhone: e.mobilePhone ?? null,
+    workPhone: e.workPhone ?? null,
+    deleted: e.__deletedAt != null,
+  }));
+
+  return JSON.stringify({ total, employees }, null, 2);
+}

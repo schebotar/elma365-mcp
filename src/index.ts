@@ -37,9 +37,37 @@ import {
   handleSearchUsers,
   getUserSchema,
   handleGetUser,
+  searchEmployeesSchema,
+  handleSearchEmployees,
 } from "./tools/users.js";
 
-const TOOL_COUNT = 8;
+// Item write tools
+import {
+  createAppItemSchema,
+  handleCreateAppItem,
+  updateAppItemSchema,
+  handleUpdateAppItem,
+  setAppItemStatusSchema,
+  handleSetAppItemStatus,
+  deleteAppItemSchema,
+  handleDeleteAppItem,
+  restoreAppItemSchema,
+  handleRestoreAppItem,
+} from "./tools/items.js";
+
+// Process (BPM) tools
+import {
+  runProcessSchema,
+  handleRunProcess,
+  searchProcessInstancesSchema,
+  handleSearchProcessInstances,
+  getProcessInstanceSchema,
+  handleGetProcessInstance,
+  interruptProcessInstanceSchema,
+  handleInterruptProcessInstance,
+} from "./tools/processes.js";
+
+const TOOL_COUNT = 18;
 
 export function createServer(): McpServer {
   const server = new McpServer({
@@ -116,6 +144,18 @@ export function createServer(): McpServer {
     getUserSchema.shape,
     async (params) => ({
       content: [{ type: "text", text: await handleGetUser(params) }],
+    }),
+  );
+
+  server.tool(
+    "search_employees",
+    "Поиск сотрудников в системном справочнике _system_catalogs.employee. " +
+      "Используй, чтобы получить id сотрудника по email/имени для ссылочных полей " +
+      "(например contract_manager_employee_multiport). " +
+      "Отличается от search_users: там пользователи (user/list), здесь сотрудники (справочник).",
+    searchEmployeesSchema.shape,
+    async (params) => ({
+      content: [{ type: "text", text: await handleSearchEmployees(params) }],
     }),
   );
 
@@ -253,6 +293,95 @@ export function createServer(): McpServer {
     getAppItemSchema.shape,
     async (params) => ({
       content: [{ type: "text", text: await handleGetAppItem(params) }],
+    }),
+  );
+
+  server.tool(
+    "create_app_item",
+    "Создать новый элемент приложения. Перед созданием вызови get_app_schema или get_app_fields, " +
+      "чтобы узнать обязательные поля и их типы.",
+    createAppItemSchema.shape,
+    async (params) => ({
+      content: [{ type: "text", text: await handleCreateAppItem(params) }],
+    }),
+  );
+
+  server.tool(
+    "update_app_item",
+    "Обновить поля существующего элемента приложения. Передаются только изменяемые поля.",
+    updateAppItemSchema.shape,
+    async (params) => ({
+      content: [{ type: "text", text: await handleUpdateAppItem(params) }],
+    }),
+  );
+
+  server.tool(
+    "set_app_item_status",
+    "Сменить статус элемента приложения. Коды статусов узнай через get_app_statuses.",
+    setAppItemStatusSchema.shape,
+    async (params) => ({
+      content: [{ type: "text", text: await handleSetAppItemStatus(params) }],
+    }),
+  );
+
+  server.tool(
+    "delete_app_item",
+    "Удалить элемент приложения (мягкое удаление — проставляется поле __deletedAt). " +
+      "Отдельного эндпоинта удаления в API нет, поэтому используется update с __deletedAt. " +
+      "Восстановить можно через restore_app_item.",
+    deleteAppItemSchema.shape,
+    async (params) => ({
+      content: [{ type: "text", text: await handleDeleteAppItem(params) }],
+    }),
+  );
+
+  server.tool(
+    "restore_app_item",
+    "Восстановить удалённый элемент (сброс __deletedAt в null). " +
+      "Если сброс не восстанавливает элемент полностью, используй run_process с admin_restoration_workflow.",
+    restoreAppItemSchema.shape,
+    async (params) => ({
+      content: [{ type: "text", text: await handleRestoreAppItem(params) }],
+    }),
+  );
+
+  // ── BPM (процессы) ─────────────────────────────────────────────
+
+  server.tool(
+    "run_process",
+    "Запустить экземпляр процесса (workflow). Возвращает контекст запущенного экземпляра: __id, __state, __createdAt.",
+    runProcessSchema.shape,
+    async (params) => ({
+      content: [{ type: "text", text: await handleRunProcess(params) }],
+    }),
+  );
+
+  server.tool(
+    "search_process_instances",
+    "Поиск экземпляров процесса по коду шаблона. Контекст экземпляров в выдаче лежит плоско " +
+      "(не во вложенном поле context).",
+    searchProcessInstancesSchema.shape,
+    async (params) => ({
+      content: [{ type: "text", text: await handleSearchProcessInstances(params) }],
+    }),
+  );
+
+  server.tool(
+    "get_process_instance",
+    "Получить экземпляр процесса по UUID: состояние (__state), контекст (плоско), " +
+      "историю пройденных блоков (__flowHistory).",
+    getProcessInstanceSchema.shape,
+    async (params) => ({
+      content: [{ type: "text", text: await handleGetProcessInstance(params) }],
+    }),
+  );
+
+  server.tool(
+    "interrupt_process_instance",
+    "Прервать экземпляр процесса по UUID. Можно указать причину (comment).",
+    interruptProcessInstanceSchema.shape,
+    async (params) => ({
+      content: [{ type: "text", text: await handleInterruptProcessInstance(params) }],
     }),
   );
 
