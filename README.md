@@ -2,7 +2,7 @@
 
 MCP-сервер для [ELMA365](https://elma365.com) API с поддержкой **EQL-поиска** — поиск элементов приложений по произвольным запросам, включая естественный язык через LLM.
 
-**20 инструментов**: чтение схем и элементов, поиск (EQL), пользователи и сотрудники, CRUD элементов (создание, изменение, статус, массовое сохранение) и работа с процессами (запуск, поиск экземпляров, чтение, прерывание, контекст, пропуск шага).
+**45 инструментов**: чтение схем и элементов, поиск (EQL), пользователи и сотрудники, CRUD элементов (создание, изменение, статус, массовое сохранение), работа с процессами (запуск, поиск экземпляров, чтение, прерывание, контекст, пропуск шага) и метаданные (разделы, решения, приложения, схемы процессов, модули, виджеты, группы).
 
 ## Возможности
 
@@ -58,6 +58,9 @@ MCP-сервер для [ELMA365](https://elma365.com) API с поддержко
 | Пользователи | `search_users`, `get_user`, `search_employees` |
 | CRUD элементов | `create_app_item`, `update_app_item`, `set_app_item_status`, `save_app_items_batch` |
 | Процессы (BPM) | `run_process`, `search_process_instances`, `get_process_instance`, `interrupt_process_instance`, `update_process_instance_context`, `skip_process_instance_step` |
+| Метаданные — сущности | `get_namespaces`, `get_namespace`, `get_solutions`, `get_solution`, `get_namespace_apps`, `get_modules`, `get_module`, `get_widgets`, `get_widget`, `get_contract_schemas`, `get_contract_schema`, `get_report_schemas`, `get_report_schema`, `get_pages`, `get_page`, `get_document_templates`, `get_document_template` |
+| Метаданные — процессы | `get_process_schema`, `get_process_forms` |
+| Метаданные — группы | `get_groups`, `get_group`, `get_group_users`, `get_group_positions`, `get_group_subgroups`, `get_group_parent_groups` |
 
 Примечание: публичный API `/pub/v1` не поддерживает удаление и восстановление элементов
 (системное поле `__deletedAt` игнорируется в `update`) — эти операции выполняются в интерфейсе

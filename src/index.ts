@@ -71,7 +71,10 @@ import {
   handleSkipProcessInstanceStep,
 } from "./tools/processes.js";
 
-const TOOL_COUNT = 20;
+// Metadata (scheme) tools
+import { metadataTools } from "./tools/metadata.js";
+
+const TOOL_COUNT = 45;
 
 export function createServer(): McpServer {
   const server = new McpServer({
@@ -445,6 +448,18 @@ export function createServer(): McpServer {
       content: [{ type: "text", text: await handleSkipProcessInstanceStep(params) }],
     }),
   );
+
+  // ── Metadata (scheme) ─────────────────────────────────────────
+
+  for (const tool of metadataTools) {
+    server.registerTool(
+      tool.name,
+      { description: tool.description, inputSchema: tool.shape },
+      async (params) => ({
+        content: [{ type: "text", text: await tool.handler(params) }],
+      }),
+    );
+  }
 
   return server;
 }
